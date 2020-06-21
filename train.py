@@ -163,6 +163,7 @@ def create_generators(args):
             skip_difficult=True,
             misc_effect=misc_effect,
             visual_effect=visual_effect,
+            image_extension=".png",
             **common_args
         )
 
@@ -171,6 +172,7 @@ def create_generators(args):
             'val',
             skip_difficult=True,
             shuffle_groups=False,
+            image_extension=".png",
             **common_args
         )
     elif args.dataset_type == 'csv':

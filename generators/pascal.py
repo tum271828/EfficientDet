@@ -144,8 +144,11 @@ class PascalVocGenerator(Generator):
         """
         Compute the aspect ratio for an image with image_index.
         """
-        path = os.path.join(self.data_dir, 'JPEGImages', self.image_names[image_index] + self.image_extension)
+        path = os.path.join(self.data_dir, 'Images', self.image_names[image_index] + self.image_extension)
         image = cv2.imread(path)
+        if image is None:
+            path = os.path.join(self.data_dir, 'JPEGImages', self.image_names[image_index] + self.image_extension)
+            image = cv2.imread(path)
         h, w = image.shape[:2]
         return float(w) / float(h)
 
@@ -153,8 +156,11 @@ class PascalVocGenerator(Generator):
         """
         Load an image at the image_index.
         """
-        path = os.path.join(self.data_dir, 'JPEGImages', self.image_names[image_index] + self.image_extension)
+        path = os.path.join(self.data_dir, 'Images', self.image_names[image_index] + self.image_extension)
         image = cv2.imread(path)
+        if image is None:
+            path = os.path.join(self.data_dir, 'JPEGImages', self.image_names[image_index] + self.image_extension)
+            image = cv2.imread(path)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         return image
 
@@ -207,6 +213,9 @@ class PascalVocGenerator(Generator):
         Load annotations for an image_index.
         """
         filename = self.image_names[image_index] + '.xml'
+        if not os.path.isfile(os.path.join(self.data_dir, 'Annotations', filename)):
+            return {'labels': np.empty((0,), dtype=np.int32),
+                       'bboxes': np.empty((0, 4))}
         try:
             tree = ET.parse(os.path.join(self.data_dir, 'Annotations', filename))
             return self.__parse_annotations(tree.getroot())
